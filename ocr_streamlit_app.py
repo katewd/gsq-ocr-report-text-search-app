@@ -21,6 +21,7 @@ from PIL import Image
 import os
 import re
 import requests
+#import boto3
 
 st.set_page_config(
       page_title="GSQ OCRd Report Search App",
@@ -54,41 +55,21 @@ st.markdown('Please note, the GSQ Report Index contains only **words and letters
 st.markdown('**A search term can be a single word, or a phrase of up to 3 words that you would expect to occur together in a sentence.**')
 
 
-# # import the repository OCR JSON file (stored as a string)
-index = 'final_combined_OCR_index_single_plus_ngrams.json'
+# # import the S3 OCR JSON file (stored as a string)
+index_url = 'https://gsq-horizon.s3.ap-southeast-2.amazonaws.com/DATASETS/ds000079/v01_GSQ_OCR_index_single_plus_ngrams.json'
+
 
 @st.cache(suppress_st_warning=True)   
-def import_index(index_json):
+def import_index():
     st.write("Cache miss -- import_index called")
-    # import the saved OCR Index JSON file (stored as a string)
-    with open(index_json) as json_file:
-        ocr = json.load(json_file)
-    # convert the json string to a dictionary
-    gsq_ocr_index = json.loads(ocr)
-    return gsq_ocr_index
-
-ocr_index = import_index(index)  
-
-
-# # import the S3 OCR JSON file (stored as a string)
-# index_url = 'https://gsq-public-data.s3.ap-southeast-2.amazonaws.com/v01_GSQ_OCR_index_single_plus_ngrams.json'  
-
-# @st.cache(suppress_st_warning=False)   # this doesn't work
-# def import_index(index_url):
-#     response = requests.get(index_url)
-#     # import the S3 OCR Index JSON file (stored as a string)
-#     ocr = json.loads(response.text)
-#     # convert the json string to a dictionary
-#     #ocr_index = json.loads(ocr)
-#     return ocr  # ocr_index
+    response = requests.get(index_url)
+    # import the S3 OCR Index JSON file (stored as a string)
+    ocr = response.json()
+        # convert the json string to a dictionary
+    ocr_index = json.loads(ocr)
+    return ocr_index
   
-# ocr_index = import_index(index_url)  # only way the app works if this is not commented out, but reloads EVERY time - slow!!
-
-# Check if the Index is already loaded, else load it - this doesn't work
-# if 'ocr_index' not in st.session_state:
-#     ocr_index = import_index(index)
-#     st.session_state['ocr_index'] = ocr_index #True
-#     st.write("Loading the index file...")
+ocr_index = import_index() 
 
 
 # add function for converting results into CSV format
