@@ -23,11 +23,11 @@ import re
 import requests
 #import boto3
 
-st.set_page_config(
-      page_title="GSQ OCRd Report Search App",
-      layout="wide",
-      initial_sidebar_state="expanded",
-)
+# st.set_page_config(
+#       page_title="GSQ OCRd Report Search App",
+#       layout="wide",
+#       initial_sidebar_state="expanded",
+# )
 
 
 # Build the app components
@@ -36,24 +36,25 @@ st.set_page_config(
 gsq = Image.open('gsq_logo.jpg')
 resources = Image.open('resources_logo.jpg')
 
-col1, col2, col3 = st.columns([1,2,1])
+col1, col2, col3 = st.columns([1,3,1])
 with col1:
     st.image(gsq, width=100)
 with col2:
-    st.header('Geological Survey of Queensland')
+    st.subheader('Geological Survey of Queensland')
 with col3:
     st.image(resources, width=100)
 
 # add title
-st.title('Searchable Text Index for GSQ Reports')
+st.header('Searchable Text Index for GSQ Reports')
 
 # add an intro
 st.write("The Geological Survey of Queensland (GSQ) is the custodian of over 100,000 reports and submissions from the Queensland resources industry, dating back more than 100 years. These legacy reports have been digitised using Optical Character Recognition (OCR) software to make them machine-readable.")
-st.write('The purpose of this search capability is to find reports that contain terms of interest based on text content, across commodities and report types, and to be able to download these reports in bulk.')
+st.write('The purpose of this search capability is to find reports that contain terms of interest based on text content, across commodities and report types, and to be able to download these reports in bulk. The GSQ Open Data Portal has an API that can access the reports, including any associated documents. The reports found in the search results here can be downloaded in full via the API. With the CSV of your search results, use the [ckan_downloader_example.py](https://github.com/geological-survey-of-queensland/open-data-api/blob/master/ckan_downloader_example.py) to download your report search results in bulk')
 st.markdown("This GSQ Report Index is our first version and was created from more than 58,000 open-file OCR\'d reports. As more reports become open-file in the future, the GSQ Report Index will be updated. Improvements to this app will be ongoing, please contact <GSQOpenData@resources.qld.gov.au> for app issues.")
 st.markdown('Please note, the GSQ Report Index contains only **words and letters**, no numbers. If you are looking for reports on a particular permit or borehole number, the [GSQ Open Data Portal](https://geoscience.data.qld.gov.au/) is a more suitable place for your search.')
 st.markdown('**A search term can be a single word, or a phrase of up to 3 words that you would expect to occur together in a sentence.**')
 
+            
 
 # # import the S3 OCR JSON file (stored as a string)
 index_url = 'https://gsq-horizon.s3.ap-southeast-2.amazonaws.com/DATASETS/ds000079/v01_GSQ_OCR_index_single_plus_ngrams.json'
@@ -89,13 +90,6 @@ advanced = st.checkbox('Advanced Search option: Use conditional joiners (and, or
 if "basic_submit_button" not in st.session_state:
     st.session_state.basic_submit_button = False
 
-# if st.form_submit_button("basic_submit_button") or st.session_state.basic_submit_button:
-#     st.session_state.basic_submit_button = True
-
-#     if st.button("Download"):
-#         st.session_state.basic_submit_button = False
-#         st.write("Download clicked!")
-################
 
 with st.form(key='basic_search_form'):
     basic_text_input1 = st.text_input(label='Enter the search term   (maximum of 3 consecutive words)')
