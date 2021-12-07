@@ -106,7 +106,7 @@ if basic_submit_button or st.session_state.basic_submit_button:
     
     
     # Remove numbers, symbols and punctuation
-    w0 = "".join([ w if (w.isalpha() or w == " ") else "" for w in w01 ])
+    w0 = "".join([ w if (w.isalpha() or w == " ") else "" for w in w01])
     if w01.isalpha() == False:
         st.write("Modifying search term to", w0)
         
@@ -189,21 +189,27 @@ if advanced:
         st.write('\n')
         st.spinner(text='searching...')
         
+        # convert to blank string if no input
+        text_input1 = text_input1 if text_input1 else ""
+        text_input2 = text_input2 if text_input2 else ""
+        text_input3 = text_input3 if text_input3 else ""
+                
+        
         # Process search term to lowercase
         w1 = text_input1.lower()
         w2 = text_input2.lower()
         w3 = text_input3.lower()
         
         # Remove numbers, symbols and punctuation
-        w11 = "".join([ w if (w.isalpha() or w == " ") else "" for w in w1 ])
+        w11 = "".join([w if (w.isalpha() or w == " ") else "" for w in w1])
         
-        w22 = "".join([ w if (w.isalpha() or w == " ") else "" for w in w2 ])
+        w22 = "".join([w if (w.isalpha() or w == " ") else "" for w in w2])
         
-        w33 = "".join([ w if (w.isalpha() or w == " ") else "" for w in w3 ])
+        w33 = "".join([w if (w.isalpha() or w == " ") else "" for w in w3])
+        
         
         if (w1.isalpha() or w2.isalpha() or w3.isalpha()) == False:
             st.write("Modifying search term to", w11, join1, w22, join2, w33)
-        
         
         
         # lemmatise search term       # this index not lemmatised so skip
@@ -215,17 +221,20 @@ if advanced:
         word2 = w22
         word3 = w33
         
-        try:
-            result1 = ocr_index[word1]
-            result2 = ocr_index[word2]
-            result3 = ocr_index[word3]
-            
+                    
         # Create lists to hold results
-            search_result = []
-            final_search_result = []
+        search_result = []
+        final_search_result = []
 
-        # Check the third search term exists, then search '(term1 condition1 term2) condition2 term3'
-            if text_input3:
+        # catch the KeyError when Index doesn't contain search term
+        try:
+
+            # Check the third search term exists, then search '(term1 condition1 term2) condition2 term3'
+            if text_input3 != '':
+                
+                result1 = ocr_index[word1]
+                result2 = ocr_index[word2]
+                result3 = ocr_index[word3]
                                    
                 # Add AND/AND Boolean search conditions
                 if (join1 == 'AND' and join2 == 'AND'):
@@ -238,7 +247,12 @@ if advanced:
                             final_search_result.append(item)
                     final_search_result.sort()
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
@@ -257,7 +271,12 @@ if advanced:
                     for item in search_result:
                         final_search_result.append(item)
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
@@ -275,13 +294,18 @@ if advanced:
                             final_search_result.append(item)
                     final_search_result.sort()
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
                         st.write('The following reports contain the terms',text_input1, join1, text_input2, join2, text_input3,':')
                         output
- 
+     
                 # Add OR/AND Boolean search conditions
                 elif (join1 == 'OR' and join2 == 'AND'):
                     for item in result1:
@@ -295,13 +319,18 @@ if advanced:
                             final_search_result.append(item)
                     final_search_result.sort()
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
                         st.write('The following reports contain the terms',text_input1, join1, text_input2, join2, text_input3,':')
                         output
- 
+     
                 # Add OR/OR Boolean search conditions
                 elif (join1 == 'OR' and join2 == 'OR'):
                     for item in result1:
@@ -316,13 +345,18 @@ if advanced:
                     for item in search_result:
                         final_search_result.append(item)
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
                         st.write('The following reports contain the terms',text_input1, join1, text_input2, join2, text_input3,':')
                         output   
-
+    
                 # Add OR/NOT Boolean search conditions
                 elif (join1 == 'OR' and join2 == 'NOT'):
                     for item in result1:
@@ -335,13 +369,18 @@ if advanced:
                             final_search_result.append(item)
                     final_search_result.sort()
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
                         st.write('The following reports contain the terms',text_input1, join1, text_input2, join2, text_input3,':')
                         output
-
+    
                 # Add NOT/AND Boolean search conditions        
                 elif (join1 == 'NOT' and join2 == 'AND'):
                     for item in result1:
@@ -353,13 +392,18 @@ if advanced:
                             final_search_result.append(item)
                     final_search_result.sort()
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
                         st.write('The following reports contain the terms',text_input1, join1, text_input2, join2, text_input3,':')
                         output
-
+    
                 # Add NOT/OR Boolean search conditions    
                 elif (join1 == 'NOT' and join2 == 'OR'):
                     for item in result1:
@@ -372,13 +416,18 @@ if advanced:
                     for item in search_result:
                         final_search_result.append(item)
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
                         st.write('The following reports contain the terms',text_input1, join1, text_input2, join2, text_input3,':')
                         output
-
+    
                 # Add NOT/NOT Boolean search conditions
                 elif (join1 == 'NOT' and join2 == 'NOT'):
                     for item in result1:
@@ -390,15 +439,23 @@ if advanced:
                             final_search_result.append(item)
                     final_search_result.sort()
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
                         st.write('The following reports contain the terms',text_input1, join1, text_input2, join2, text_input3,':')
                         output
-            
+                
+                
             # search 'term1 condition1 term2' only
             else:
+                result1 = ocr_index[word1]
+                result2 = ocr_index[word2]
                         
             # Add first Boolean search condition
                 if join1 == 'AND':
@@ -407,12 +464,18 @@ if advanced:
                             final_search_result.append(item)
                     final_search_result.sort()
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(final_search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
                         st.write('The following reports contain the terms',text_input1, join1, text_input2,':')
                         output
+    
                 
                 elif join1 == 'OR':
                     for item in result1:
@@ -422,7 +485,12 @@ if advanced:
                             final_search_result.append(item)
                     final_search_result.sort()
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(final_search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
@@ -435,13 +503,18 @@ if advanced:
                             final_search_result.append(item)
                     final_search_result.sort()
                     output = ', '.join(final_search_result)
-                    st.write(len(final_search_result),'results found')
+                    if len(final_search_result) == 0:
+                        st.write('Sorry, no results were found for that specific search')
+                        st.write('You could try the search using similar words instead, or try the same words in a different order')
+                        st.write('\n') 
+                    else:
+                        st.write(len(final_search_result),'results found')
                     if len(final_search_result) > 200:
                         st.write('The number of reports that contain your search term is too many to print them all out here. Download the full list using the button below.')
                     else:
                         st.write('The following reports contain the terms',text_input1, join1, text_input2,':')
                         output
-
+    
                     
             st.write('\n')
             st.write('\n')
@@ -469,9 +542,9 @@ if advanced:
 
         except:
             KeyError()
-            st.write('Sorry, no results were found for that specific search')
-            st.write('You could try the search using similar words instead, or try the same words in a different order')
-            st.write('\n')
+            st.write('The search term is not found in the GSQ Report Index')
+            st.write('You could try the search again using similar words instead')
+            st.write('\n') 
 
 
 # Add a 'clear form' option
