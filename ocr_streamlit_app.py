@@ -21,7 +21,7 @@ from PIL import Image
 import os
 import re
 import requests
-#import boto3
+
 
 # st.set_page_config(
 #       page_title="GSQ OCRd Report Search App",
@@ -60,7 +60,7 @@ st.markdown('**A search term can be a single word, or a phrase of up to 3 words 
 index_url = 'https://gsq-horizon.s3.ap-southeast-2.amazonaws.com/DATASETS/ds000079/v01_GSQ_OCR_index_single_plus_ngrams.json'
 
 
-@st.cache(suppress_st_warning=True)   
+@st.experimental_memo(suppress_st_warning=True)   
 def import_index():
     st.write("Cache miss -- import_index called")
     response = requests.get(index_url)
