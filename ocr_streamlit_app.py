@@ -8,7 +8,11 @@ This code is to test the use of Streamlit as a tool to explore the OCR'd GSQ rep
 
 The GSQ OCR Index was created by running my 'ocr_searchable_index_creation.py' script 
 over 58,000 OCR'd reports. As more reports become open-file and are OCR'd, 
-the index json file will be updated and pushed to the repository. 
+the index json file will be updated and the file endpoint pushed to the repository. 
+
+A second batch of over 25,000 files were OCR'd and processed, and the Index file updated.
+This means the Index now includes over 83,000 industry reports submitted to GSQ.
+This app script was re-pointed to the 'version 2' Index file on 2022-09-28.
 
 """
 
@@ -50,14 +54,14 @@ st.header('Searchable Text Index for GSQ Reports')
 # add an intro
 st.write("The Geological Survey of Queensland (GSQ) is the custodian of over 100,000 reports and submissions from the Queensland resources industry, dating back more than 100 years. These legacy reports have been digitised using Optical Character Recognition (OCR) software to make them machine-readable.")
 st.write('The purpose of this search capability is to find reports that contain terms of interest based on text content, across commodities and report types, and to be able to download these reports in bulk. The GSQ Open Data Portal has an API that can access the reports, including any associated documents. The reports found in the search results here can be downloaded in full via the API. With the CSV of your search results, use the [ckan_downloader_example.py](https://github.com/geological-survey-of-queensland/open-data-api/blob/master/ckan_downloader_example.py) to download your report search results in bulk')
-st.markdown("This GSQ Report Index is our first version and was created from more than 58,000 open-file OCR\'d reports. As more reports become open-file in the future, the GSQ Report Index will be updated. Improvements to this app will be ongoing, please contact <GSQOpenData@resources.qld.gov.au> for app issues.")
+st.markdown("This GSQ Report Index is our second version and was created from more than 83,000 open-file OCR\'d reports. As more reports become open-file in the future, the GSQ Report Index will be updated. Improvements to this app will be ongoing, please contact <GSQOpenData@resources.qld.gov.au> for app issues.")
 st.markdown('Please note, the GSQ Report Index contains only **words and letters**, no numbers. If you are looking for reports on a particular permit or borehole number, the [GSQ Open Data Portal](https://geoscience.data.qld.gov.au/) is a more suitable place for your search.')
 st.markdown('**A search term can be a single word, or a phrase of up to 3 words that you would expect to occur together in a sentence.**')
 
             
 
 # # import the S3 OCR JSON file (stored as a string)
-index_url = 'https://gsq-horizon.s3.ap-southeast-2.amazonaws.com/DATASETS/ds000079/v01_GSQ_OCR_index_single_plus_ngrams.json'
+index_url = 'https://gsq-horizon.s3.ap-southeast-2.amazonaws.com/DATASETS/ds000079/v02_GSQ_OCR_index_single_plus_ngrams.json'
 
 
 @st.experimental_memo(suppress_st_warning=True)   
